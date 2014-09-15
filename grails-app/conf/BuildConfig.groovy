@@ -40,16 +40,14 @@ grails.project.dependency.resolution = {
         mavenLocal()
         grailsCentral()
         mavenCentral()
-        // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://dev-hudson1.sat.intensive.int:8071/nexus/content/groups/public"
     }
 
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
-        // runtime 'mysql:mysql-connector-java:5.1.29'
-        // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
+        compile ("com.rackspace.monitoring:automation-mongo-support:2.0-SNAPSHOT") {
+            excludes 'slf4j-log4j12', 'hibernate-annotations'
+        }
+        compile "org.mongodb:mongo-java-driver:2.12.2"
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
     }
 

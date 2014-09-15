@@ -10,6 +10,8 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
+System.setProperty('automationMongoService.propertiesLocation', "file:${userHome}/mongo.properties")
+grails.config.locations = ["file:${userHome}/mongo.properties"]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
