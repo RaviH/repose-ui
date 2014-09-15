@@ -3,9 +3,8 @@ package org.repose
 import grails.converters.JSON
 
 class ReposeConfigController {
-
     ReposeService reposeService
-    def propertiesToRender = ['name', 'version']
+    def propertiesToRender = ['name', 'version', 'isDefault']
 
     def index() {
     }
@@ -41,13 +40,16 @@ class ReposeConfigController {
     def getAllConfigs() {
         def dataToRender
         try {
-            if (params.sSearch) {
+            def searchString = params.get("search[value]")
+            def sorting = params.get("order[0][column]")
+            def sortingDir = params.get("order[0][dir]")
+            if (searchString) {
                 // Refresh data only if forceRefresh is set and force refresh will be set
                 // when a template is updated and we have a filter value set in the search box.
-                dataToRender = performSearchOnLatestReposeConfigs()
+                dataToRender = performSearchOnLatestReposeConfigs(searchString)
             } else {
                 List<ReposeConfigCommand> commands = reposeService.getAllConfigFiles()
-                dataToRender = prepareResponseMap(commands)
+                dataToRender = sortData(commands, propertiesToRender[sorting as Integer], sortingDir == "asc" ? true : false )
             }
         } catch (Exception e) {
             dataToRender = [errorMessage: 'Error occurred while querying the database to get the configs']
@@ -55,31 +57,41 @@ class ReposeConfigController {
         render dataToRender as JSON
     }
 
-    private def performSearchOnLatestReposeConfigs() {
+    private sortData(List<ReposeConfigCommand> commands, String sortColumn, boolean ascending) {
+        if (ascending) {
+            prepareResponseMap(commands.sort { a, b -> a."$sortColumn" <=> b."$sortColumn" })
+        } else {
+            prepareResponseMap(commands.sort { a, b -> b."$sortColumn" <=> a."$sortColumn" })
+        }
+    }
+
+    private def performSearchOnLatestReposeConfigs(String searchString) {
         List<ReposeConfigCommand> reposeConfigCommands = reposeService.getAllConfigFiles()
         def matchingReposeConfigs = reposeConfigCommands.findAll { ReposeConfigCommand reposeConfigCommand ->
-            reposeConfigCommand.name.toLowerCase().contains((params.sSearch as String).toLowerCase())
+            reposeConfigCommand.name.toLowerCase().contains(searchString.toLowerCase())
         }
         prepareResponseMap(matchingReposeConfigs)
     }
 
 
     private def prepareResponseMap(List<ReposeConfigCommand> reposeConfigs) {
-        def dataToRender = [sEcho: params.sEcho, aaData: []]
+        def dataToRender = [draw: params.draw, aaData: []]
         reposeConfigs.each { ReposeConfigCommand reposeConfigCommand ->
-            def data = [:]
-            propertiesToRender.each { data.put(it, reposeConfigCommand."${it}") }
+            def data = []
+            propertiesToRender.each { data.add(reposeConfigCommand."${it}") }
             dataToRender.aaData << data
         }
+        dataToRender.recordsTotal = dataToRender.aaData.size()
         dataToRender.iTotalRecords = dataToRender.aaData.size()
         paginateConfigurationsList(dataToRender)
+        dataToRender.recordsFiltered = dataToRender.iTotalRecords
         dataToRender.iTotalDisplayRecords = dataToRender.iTotalRecords
         dataToRender
     }
 
     private def paginateConfigurationsList(def dataToRender) {
         def aaDataSize = dataToRender.aaData.size()
-        def startIndex = params?.iDisplayStart as Integer
+        def startIndex = params.start as Integer
 
         if (startIndex != null) {
             int endIndex = getEndIndex(startIndex, aaDataSize)
@@ -88,7 +100,7 @@ class ReposeConfigController {
     }
 
     private def getEndIndex(int startIndex, aaDataSize) {
-        def paginationEndIndex = startIndex + (params.iDisplayLength as Integer)
+        def paginationEndIndex = startIndex + (params.length as Integer)
         aaDataSize < paginationEndIndex || paginationEndIndex == -1 ? aaDataSize : paginationEndIndex
     }
 }
