@@ -13,3 +13,16 @@
 *= require datatable/jquery.dataTables_themeroller
 *= require datatable/dataTables.bootstrap
 */
+
+.entireWindow {
+    width: 70%;
+    height: 90%;
+}
+
+#configContent {
+    height: 35em !important;
+}
+
+#configContentLabel {
+    padding-left: 10px;
+}

@@ -37,6 +37,24 @@ class ReposeConfigController {
         render record as JSON
     }
 
+    def getConfigFor(String configName) {
+        def responseMap = [:]
+        if (configName) {
+            try {
+                def data = new File("/etc/repose/$configName").readLines()
+                responseMap.response = 'success'
+                responseMap.data = data.join("\n")
+            } catch (FileNotFoundException ie) {
+                responseMap.errorMessage = "Could not find a corresponding config file"
+            } catch (IOException ie) {
+                responseMap.errorMessage = "Could not read the config file"
+            }
+        } else {
+            responseMap.errorMessage = "Please provide a config name"
+        }
+        render responseMap as JSON
+    }
+
     def getAllConfigs() {
         def dataToRender
         try {
