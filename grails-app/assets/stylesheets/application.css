@@ -8,6 +8,7 @@
 * compiled file, but it's generally better to create a new file per style scope.
 *
 *= require dashboard
+*= require atmosphere_remove_me
 *= require_self
 *= require datatable/jquery.dataTables
 *= require datatable/jquery.dataTables_themeroller

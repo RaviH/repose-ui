@@ -10,6 +10,7 @@
 //= require datatable/jquery.dataTables
 //= require datatable/dataTables.bootstrap
 //= require_self
+//= require atmosphere-meteor-jquery
 
 if (typeof jQuery !== 'undefined') {
 	(function($) {
