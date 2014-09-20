@@ -7,6 +7,8 @@
 //
 //= require jquery
 //= require bootstrap
+//= require bootbox
+//= require helper
 //= require datatable/jquery.dataTables
 //= require datatable/dataTables.bootstrap
 //= require_self
