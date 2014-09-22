@@ -40,11 +40,7 @@
             },
             success: function (data) {
                 if (data.response === 'success') {
-                    bootbox.alert({
-                        title: "Success",
-                        message: "Configuration saved successfully",
-                        onEscape: function() { $(this).modal('hide') }
-                    });
+                    Jabber.chatSubscription.push(JSON.stringify("Saved successfully!!!"));
                     return true;
                 } else {
                     showErrorMessage(data.errorMessage);
@@ -66,6 +62,9 @@
                 '           <label id="configContentLabel" class="control-label" style="float: left;" for="configContent">Config Content</label>' +
                 '           <div class="col-md-11">' +
                 '               <textarea class="col-md-11" id="configContent">' + data + '</textarea>' +
+                '           </div>' +
+                '           <div class="col-md-12">' +
+                '               <textarea class="col-md-12" id="logContent" disabled></textarea>' +
                 '           </div>' +
                 '       </div>' +
                 '   </form>' +
@@ -117,6 +116,8 @@
                 showConfigurationContent(rowData[0]);
             }
         });
+
+        subcribeToChat();
     });
 </script>
 </body>
