@@ -21,34 +21,59 @@
         <tbody>
         </tbody>
     </table>
-
-    <div id="configurationContentDialog" class="entireWindow" hidden="hidden">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label id="configContentLabel" class="control-label" style="float: left;" for="configContent">Config Content</label>
-                <div class="col-md-11">
-                    <textarea class="col-md-11" id="configContent"></textarea>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
 </div>
 <script>
+    var configTable;
+
+    function saveConfig() {
+        var configName = $('#configName').text();
+        var configContent = $('#configContent').val();
+        $.ajax({
+            type: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            url: "${g.createLink(controller: 'reposeConfig', action: 'saveConfig')}",
+            data: JSON.stringify({'configName' : configName, 'configContent' : configContent}),
+            error: function (request, status, error) {
+                showErrorMessage("System error occurred while saving repose configuration for " + configName);
+            },
+            success: function (data) {
+                if (data.response === 'success') {
+                    bootbox.alert({
+                        title: "Success",
+                        message: "Configuration saved successfully",
+                        onEscape: function() { $(this).modal('hide') }
+                    });
+                    return true;
+                } else {
+                    showErrorMessage(data.errorMessage);
+                    return false;
+                }
+            }
+        });
+        return false;
+    }
+
     function popupConfigContent(name, data) {
-        $('#configContent').text(data);
         bootbox.dialog({
             title: name,
-            message: $('#configurationContentDialog').html(),
+            message:
+                '<div id="configurationContentDialog" class="entireWindow">' +
+                '   <form class="form-horizontal">' +
+                '       <div class="form-group">' +
+                '           <label id="configName" hidden="hidden">' + name + '</label>' +
+                '           <label id="configContentLabel" class="control-label" style="float: left;" for="configContent">Config Content</label>' +
+                '           <div class="col-md-11">' +
+                '               <textarea class="col-md-11" id="configContent">' + data + '</textarea>' +
+                '           </div>' +
+                '       </div>' +
+                '   </form>' +
+                '</div>',
+            onEscape: function() { $(this).modal('hide') },
             buttons: {
                 success: {
-                    label: "Save",
-                            className: "btn-success",
-                            callback: function () {
-                        var name = $('#name').val();
-                        var answer = $("input[name='awesomeness']:checked").val()
-                        Example.show("Hello " + name + ". You've chosen <b>" + answer + "</b>");
-                    }
+                    label: "Save", className: "btn-success", callback: saveConfig
                 }
             }
         }).find("div.modal-dialog").addClass("entireWindow");
@@ -75,7 +100,7 @@
     }
 
     $(document).ready(function () {
-        var table = $('#configurationsTable').DataTable({
+        configTable = $('#configurationsTable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": "${g.createLink(controller: 'reposeConfig', action: 'getAllConfigs')}"
@@ -86,9 +111,9 @@
                 $(this).removeClass('selected');
             }
             else {
-                table.$('tr.selected').removeClass('selected');
+                configTable.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-                var rowData = table.row( this ).data();
+                var rowData = configTable.row( this ).data();
                 showConfigurationContent(rowData[0]);
             }
         });

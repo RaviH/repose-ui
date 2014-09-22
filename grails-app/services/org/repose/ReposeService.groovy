@@ -1,5 +1,6 @@
 package org.repose
 
+import com.google.common.io.Files
 import com.rackspace.automation.support.mongo.ConfigFile
 import com.rackspace.automation.support.mongo.ConfigGridFSFile
 import com.rackspace.automation.support.mongo.repository.ConfigFileRepository
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 @Transactional
 class ReposeService {
+    static final String BASE_CONFIG_DIR = "/etc/repose"
     @Autowired
     ConfigFileRepository configFileRepository
     @Autowired
@@ -43,6 +45,30 @@ class ReposeService {
             }
         }
         configCommands
+    }
+
+    def saveConfigFile(String configName, String configContent) {
+        log.info("File content for $configName:\n$configContent")
+        def responseMap = [response: 'success']
+        def timeStamp = new Date().format("yyyy.MM.dd_HH.mm.ss")
+        try {
+            // Take backup
+            String sourceFileName = "$BASE_CONFIG_DIR/$configName"
+            String backupFileName = "$BASE_CONFIG_DIR/${configName}.backup.${timeStamp}"
+            Files.copy(new File(sourceFileName), new File(backupFileName))
+            // Remove the sourceFile
+            new File(sourceFileName).delete()
+            // Create a new file with updated content
+            def newFile = new File(sourceFileName)
+            newFile << configContent
+        } catch (FileNotFoundException fe) {
+            log.error(fe)
+            responseMap.errorMessage = "Could not find a corresponding config file"
+        } catch(IOException ie) {
+            log.error(ie)
+            responseMap.errorMessage = "Could not read the config file"
+        }
+        return responseMap
     }
 
     def allConfigFilesFor(String fileName) {

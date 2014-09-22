@@ -1,5 +1,6 @@
 package org.repose
 
+import com.google.common.io.Files
 import grails.converters.JSON
 
 class ReposeConfigController {
@@ -51,6 +52,22 @@ class ReposeConfigController {
             }
         } else {
             responseMap.errorMessage = "Please provide a config name"
+        }
+        render responseMap as JSON
+    }
+
+    def saveConfig() {
+        def configName = request?.JSON?.configName as String
+        def configContent = request?.JSON?.configContent?.trim() as String
+        assert !configName?.isEmpty(), "Please provide the configuration name."
+        assert !configContent?.isEmpty(), "Please provide the configuration content."
+
+        def responseMap = [:]
+        try {
+            responseMap = reposeService.saveConfigFile(configName, configContent)
+        } catch (Exception e) {
+            responseMap.response = 'failure'
+            responseMap.errorMessage = e.message
         }
         render responseMap as JSON
     }
