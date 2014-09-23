@@ -6,9 +6,6 @@ import org.atmosphere.cpr.Broadcaster
 import org.atmosphere.cpr.DefaultBroadcaster
 import org.atmosphere.cpr.Meteor
 
-import grails.converters.JSON
-import org.repose.TailFileService
-
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -21,7 +18,7 @@ class ChatMeteorHandler extends HttpServlet {
 
 	def atmosphereMeteor = Holders.applicationContext.getBean("atmosphereMeteor")
 	def atmosphereTestService = Holders.applicationContext.getBean("atmosphereTestService")
-	
+
 	@Override
 	void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String mapping = "/atmosphere/chat" + request.getPathInfo()
@@ -50,19 +47,7 @@ class ChatMeteorHandler extends HttpServlet {
 	@Override
 	void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String mapping = "/atmosphere/chat" + request.getPathInfo();
-
-		String message = TailFileService.stopWhenFound("/var/log/repose/current.log", "Repose Ready")
-
-        if (message == null) {
-			atmosphereTestService.recordIncompleteMessage()
-		} else {
-			if (message.toLowerCase().contains("<script")) {
-				atmosphereTestService.recordMaliciousUseWarning(message)
-			} else {
-                atmosphereTestService.recordChat(message)
-				Broadcaster b = atmosphereMeteor.broadcasterFactory.lookup(DefaultBroadcaster.class, mapping)
-                b.broadcast(message)
-			}
-		}
+        LogFileUpdateService logFileUpdateService = Holders.applicationContext.getBean("logFileUpdateService")
+        logFileUpdateService.handleLog(mapping)
 	}
 }
