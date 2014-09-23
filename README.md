@@ -1,4 +1,4 @@
-bootstrap-ui
+repose-ui
 ============
 
-Grails experiment with twitter-bootstrap. Might add repose ui to it.
+Allows user to view current Repose configurations, update them and add new ones.
