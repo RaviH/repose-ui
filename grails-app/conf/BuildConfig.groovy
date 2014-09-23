@@ -1,4 +1,5 @@
 grails.servlet.version = "3.0" // Change depending on target container compliance (2.5 or 3.0)
+grails.tomcat.nio = true
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
@@ -64,6 +65,7 @@ grails.project.dependency.resolution = {
         compile ":scaffolding:2.1.2"
         compile ':cache:1.1.7'
         compile ":asset-pipeline:1.9.9"
+        compile ":atmosphere-meteor:1.0.1"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.17"
