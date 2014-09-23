@@ -117,6 +117,11 @@
             }
         });
 
+        $('a[name=addConfig]').click(function (event) {
+            event.preventDefault();
+            bootbox.alert("Coming to a screen near you....soon!!!")
+        });
+
         subcribeToChat();
     });
 </script>
