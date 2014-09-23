@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse
 
 import static org.atmosphere.cpr.AtmosphereResource.TRANSPORT.WEBSOCKET
 
-class ChatMeteorHandler extends HttpServlet {
+class LogFileMeteorHandler extends HttpServlet {
 
     def atmosphereMeteor = Holders.applicationContext.getBean("atmosphereMeteor")
     def atmosphereTestService = Holders.applicationContext.getBean("atmosphereTestService")

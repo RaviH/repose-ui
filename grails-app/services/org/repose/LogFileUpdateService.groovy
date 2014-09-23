@@ -54,7 +54,7 @@ class LogFileUpdateService {
                 b.broadcast(message ?: "Ending the wait...")
                 break
             } else if (!message) {
-                b.broadcast("Waiting for file to update for $i seconds...\n")
+                b.broadcast("Waiting for Repose to update for $i seconds...\n")
             } else {
                 b.broadcast(message)
             }

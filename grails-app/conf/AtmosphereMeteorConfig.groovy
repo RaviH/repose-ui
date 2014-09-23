@@ -1,4 +1,4 @@
-import org.repose.ChatMeteorHandler
+import org.repose.LogFileMeteorHandler
 
 def defaultMapping = "/atmosphere/*"
 
@@ -15,7 +15,7 @@ servlets = [
         MeteorServletChat: [
                 className: "org.repose.DefaultMeteorServlet",
                 mapping: "/atmosphere/chat/*",
-                handler: ChatMeteorHandler,
+                handler: LogFileMeteorHandler,
                 initParams: defaultInitParams
         ]
 ]
