@@ -1,6 +1,5 @@
 package org.repose
 
-import com.google.common.io.Files
 import grails.converters.JSON
 
 class ReposeConfigController {
@@ -84,7 +83,7 @@ class ReposeConfigController {
                 dataToRender = performSearchOnLatestReposeConfigs(searchString)
             } else {
                 List<ReposeConfigCommand> commands = reposeService.getAllConfigFiles()
-                dataToRender = sortData(commands, propertiesToRender[sorting as Integer], sortingDir == "asc" ? true : false )
+                dataToRender = sortData(commands, propertiesToRender[sorting as Integer], sortingDir == "asc" ? true : false)
             }
         } catch (Exception e) {
             dataToRender = [errorMessage: 'Error occurred while querying the database to get the configs']
