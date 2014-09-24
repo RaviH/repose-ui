@@ -1,3 +1,5 @@
+import org.apache.log4j.DailyRollingFileAppender
+
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -10,8 +12,13 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-System.setProperty('automationMongoService.propertiesLocation', "file:${userHome}/mongo.properties")
-grails.config.locations = ["file:${userHome}/mongo.properties"]
+def reposeUIConfig = "${userHome}/repose-ui.properties"
+if (!new File(reposeUIConfig).exists()) {
+    throw new FileNotFoundException("Please provide repose-ui properties file")
+}
+
+System.setProperty('automationMongoService.propertiesLocation', "file:$reposeUIConfig")
+grails.config.locations = ["file:$reposeUIConfig"]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
@@ -100,10 +107,18 @@ environments {
 // log4j configuration
 log4j.main = {
     // Example of changing the log pattern for the default console appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+    appenders {
+        appender new DailyRollingFileAppender (
+            name: 'dailyAppender',
+            datePattern: "'.'yyyy-MM-dd",  // See the API for all patterns.
+            fileName: "/tmp/repose-ui.log",
+            layout: pattern(conversionPattern:'%d [%t] %-5p %c{2} %x - %m%n')
+        )
+    }
+
+    root {
+        info 'stdout', 'dailyAppender'
+    }
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
