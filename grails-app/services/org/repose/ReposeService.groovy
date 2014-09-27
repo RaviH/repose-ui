@@ -1,47 +1,34 @@
 package org.repose
 
 import com.google.common.io.Files
-import com.rackspace.automation.support.mongo.ConfigFile
-import com.rackspace.automation.support.mongo.ConfigGridFSFile
-import com.rackspace.automation.support.mongo.repository.ConfigFileRepository
-import com.rackspace.automation.support.mongo.repository.ConfigGridFsFileRepository
 import grails.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 
 @Transactional
 class ReposeService {
     static final String BASE_CONFIG_DIR = "/etc/repose"
-    @Autowired
-    ConfigFileRepository configFileRepository
-    @Autowired
-    ConfigGridFsFileRepository configGridFsFileRepository
-
     private final static int BASE_VERSION = 1
 
-    private List<ConfigFile> getAllConfigsIn(String directoryPath = "/etc/repose") {
+    private List<ReposeConfig> getAllConfigsIn(String directoryPath = "/etc/repose") {
         FileUtil.allFilesInDirectory(directoryPath)
     }
 
     private boolean isDbEmpty() {
-        configFileRepository.count() == 0
+        ReposeConfig.count == 0
     }
 
     def setupDataFirstTime(String directoryPath = "/etc/repose") {
         if (isDbEmpty()) {
-            getAllConfigsIn(directoryPath).each { ConfigFile configFile ->
-                def physicalFile = new FileInputStream(configFile.absoluteFilePath)
-                configGridFsFileRepository.store(physicalFile, configFile.fileName, ["version": BASE_VERSION])
-                configFile.versions = [BASE_VERSION]
-                configFileRepository.save(configFile)
+            getAllConfigsIn(directoryPath).each { ReposeConfig reposeConfig ->
+                reposeConfig.save(flush:true, failOnError: true)
             }
         }
     }
 
     def getAllConfigFiles() {
         List<ReposeConfigCommand> configCommands = []
-        configFileRepository.findAll().each { ConfigFile configFile ->
-            configGridFsFileRepository.findByName(configFile.fileName).each { ConfigGridFSFile configGridFSFile ->
-                configCommands << new ReposeConfigCommand(name: configFile.fileName, version: configGridFSFile.version, isDefault: configFile.defaultVersion)
+        ReposeConfig.findAll().each { ReposeConfig reposeConfig ->
+            reposeConfig.configFileList.each { ReposeConfigFile reposeConfigFile ->
+                configCommands << new ReposeConfigCommand(name: reposeConfig.fileName, version: reposeConfigFile.version, isDefault: reposeConfig.defaultVersion)
             }
         }
         configCommands
@@ -61,6 +48,7 @@ class ReposeService {
             // Create a new file with updated content
             def newFile = new File(sourceFileName)
             newFile << configContent
+            saveConfigToDB(configName, configContent)
         } catch (FileNotFoundException fe) {
             log.error(fe)
             responseMap.errorMessage = "Could not find a corresponding config file"
@@ -71,22 +59,30 @@ class ReposeService {
         return responseMap
     }
 
+    def saveConfigToDB(String configName, String configContent) {
+        ReposeConfig reposeConfig = ReposeConfig.findByConfigName(configName)
+        int latestVersion = reposeConfig.configFileList[0].version
+        reposeConfig.configFileList << new ReposeConfigFile(fileContent: configContent, version: latestVersion + 1 )
+        reposeConfig.save(flush: true, failOnError: true)
+    }
+
     def allConfigFilesFor(String fileName) {
         List<ReposeConfigCommand> configCommands = []
-        ConfigFile configFile = configFileRepository.findOneByFileName(fileName)
-        configGridFsFileRepository.findByName(configFile.fileName).each { ConfigGridFSFile configGridFSFile ->
-            configCommands << new ReposeConfigCommand(name: configFile.fileName, version: configGridFSFile.version, isDefault: configFile.defaultVersion)
+        ReposeConfig reposeConfig = ReposeConfig.findByFileName(fileName)
+        reposeConfig.configFileList.each { ReposeConfigFile reposeConfigFile ->
+            configCommands << new ReposeConfigCommand(name: reposeConfig.fileName, version: reposeConfigFile.version, isDefault: reposeConfig.defaultVersion)
         }
         configCommands
     }
 
     def setDefault(String fileName, int version) {
-        ConfigFile configFile = configFileRepository.findOneByFileName(fileName)
-        configFile.defaultVersion = version
-        configFileRepository.save(configFile)
+        ReposeConfig reposeConfig = ReposeConfig.findByFileName(fileName)
+        reposeConfig.version = version
+        reposeConfig.save(flush: true, failOnError: true)
     }
 
     def configFor(String fileName, int version) {
-        configGridFsFileRepository.readFile(fileName, version)
+        def reposeConfig = ReposeConfig.findByFileName(fileName)
+        reposeConfig.configFileList.find {ReposeConfigFile reposeConfigFile -> reposeConfigFile.version == version }.fileContent
     }
 }

@@ -9,6 +9,17 @@ class ReposeConfigController {
     def index() {
     }
 
+    def setupDataFirstTime() {
+        def responseMap = [response: 'success']
+        try {
+            reposeService.setupDataFirstTime()
+        } catch (Exception e) {
+            log.error(e)
+            responseMap = [errorMessage: 'Error occurred while storing configurations into the database.']
+        }
+        render responseMap as JSON
+    }
+
     def setDefaultFor() {
         def responseMap = [response: 'success']
         try {
@@ -86,6 +97,7 @@ class ReposeConfigController {
                 dataToRender = sortData(commands, propertiesToRender[sorting as Integer], sortingDir == "asc" ? true : false)
             }
         } catch (Exception e) {
+            log.error("Error occurred while retrieving all the configurations!", e)
             dataToRender = [errorMessage: 'Error occurred while querying the database to get the configs']
         }
         render dataToRender as JSON

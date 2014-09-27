@@ -26,6 +26,22 @@
 <script>
     var configTable;
 
+    function setupDataFirstTime() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: false,
+            contentType: "application/json",
+            url: "${g.createLink(controller: 'reposeConfig', action: 'setupDataFirstTime')}",
+            data: {},
+            error: function (request, status, error) {
+                bootbox.alert("Error occurred while saving data for the configurations into the database!");
+            },
+            success: function (data) {
+            }
+        });
+    }
+
     function saveConfig() {
         var configName = $('#configName').text();
         var configContent = $('#configContent').val();
@@ -99,6 +115,8 @@
     }
 
     $(document).ready(function () {
+        setupDataFirstTime();
+
         configTable = $('#configurationsTable').DataTable({
             "processing": true,
             "serverSide": true,

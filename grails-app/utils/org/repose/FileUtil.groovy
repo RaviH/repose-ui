@@ -1,6 +1,5 @@
 package org.repose
 
-import com.rackspace.automation.support.mongo.ConfigFile
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import org.apache.commons.codec.digest.DigestUtils
@@ -26,15 +25,14 @@ class FileUtil {
         DigestUtils.md5Hex(file.newInputStream())
     }
 
-    static List<ConfigFile> allFilesInDirectory(String directoryPath) {
+    static List<ReposeConfig> allFilesInDirectory(String directoryPath) {
         log.info("Directory path (before normalization): $directoryPath")
         def directoryPathWithUnixFileSeparator = FilenameUtils.normalizeNoEndSeparator(directoryPath, true)
         log.info("Directory path (after normalization): $directoryPathWithUnixFileSeparator")
-        List<ConfigFile> fileList = []
+        List<ReposeConfig> fileList = []
         new File(directoryPathWithUnixFileSeparator).eachFileRecurse(FILES) { File file ->
-            fileList << new ConfigFile(fileName: file.name,
-                    baseFilePath: file.parent,
-                    absoluteFilePath: file.absolutePath)
+            def reposeConfigFile = new ReposeConfigFile(fileContent: file.text)
+            fileList << new ReposeConfig(configName: file.name, fileName: file.name, baseFilePath: file.parent, absoluteFilePath: file.absolutePath, configFileList: [reposeConfigFile])
         }
         fileList
     }
