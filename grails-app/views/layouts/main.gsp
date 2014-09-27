@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="template for the app">
     <meta name="author" content="Ravi Hasija">
-
+    <link rel="shortcut icon" type="image/x-icon" href="${assetPath(src: 'favicon.png')}" />
     <title><g:layoutTitle default="Repose UI"/></title>
 
     %{--Including bootstrap.css -- copied from their website.

@@ -9,7 +9,6 @@ class BootStrap {
     def init = { servletContext ->
         validateReposeConfigDir()
         validateReposeLogFile()
-        reposeService.setupDataFirstTime("/etc/repose")
     }
 
     def validateReposeConfigDir() {
