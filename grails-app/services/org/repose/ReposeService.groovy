@@ -2,13 +2,13 @@ package org.repose
 
 import com.google.common.io.Files
 import grails.transaction.Transactional
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 @Transactional
 class ReposeService {
-    static final String BASE_CONFIG_DIR = "/etc/repose"
-    private final static int BASE_VERSION = 1
+    GrailsApplication grailsApplication
 
-    private List<ReposeConfig> getAllConfigsIn(String directoryPath = "/etc/repose") {
+    private List<ReposeConfig> getAllConfigsIn(String directoryPath) {
         FileUtil.allFilesInDirectory(directoryPath)
     }
 
@@ -16,7 +16,7 @@ class ReposeService {
         ReposeConfig.count == 0
     }
 
-    def setupDataFirstTime(String directoryPath = "/etc/repose") {
+    def setupDataFirstTime(String directoryPath) {
         if (isDbEmpty()) {
             getAllConfigsIn(directoryPath).each { ReposeConfig reposeConfig ->
                 reposeConfig.save(flush:true, failOnError: true)
@@ -40,8 +40,9 @@ class ReposeService {
         def timeStamp = new Date().format("yyyy.MM.dd_HH.mm.ss")
         try {
             // Take backup
-            String sourceFileName = "$BASE_CONFIG_DIR/$configName"
-            String backupFileName = "$BASE_CONFIG_DIR/${configName}.backup.${timeStamp}"
+            String baseConfigDir = grailsApplication.config.reposeConfigDir
+            String sourceFileName = "$baseConfigDir/$configName"
+            String backupFileName = "$baseConfigDir/${configName}.backup.${timeStamp}"
             Files.copy(new File(sourceFileName), new File(backupFileName))
             // Remove the sourceFile
             new File(sourceFileName).delete()

@@ -1,8 +1,10 @@
 package org.repose
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class ReposeConfigController {
+    GrailsApplication grailsApplication
     ReposeService reposeService
     def propertiesToRender = ['name', 'version', 'isDefault']
 
@@ -12,7 +14,7 @@ class ReposeConfigController {
     def setupDataFirstTime() {
         def responseMap = [response: 'success']
         try {
-            reposeService.setupDataFirstTime()
+            reposeService.setupDataFirstTime(grailsApplication.config.reposeConfigDir as String)
         } catch (Exception e) {
             log.error(e)
             responseMap = [errorMessage: 'Error occurred while storing configurations into the database.']
@@ -52,7 +54,7 @@ class ReposeConfigController {
         def responseMap = [:]
         if (configName) {
             try {
-                def data = new File("/etc/repose/$configName").readLines()
+                def data = new File("${grailsApplication.config.reposeConfigDir}/$configName").readLines()
                 responseMap.response = 'success'
                 responseMap.data = data.join("\n")
             } catch (FileNotFoundException ie) {
