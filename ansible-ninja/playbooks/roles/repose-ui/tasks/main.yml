@@ -1,0 +1,8 @@
+# - include: install-packages.yml
+#   sudo: yes
+
+- include: install-grails.yml
+  sudo: no
+
+- include: install-repose-ui.yml
+  sudo: no

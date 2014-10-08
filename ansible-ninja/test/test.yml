@@ -1,0 +1,8 @@
+- hosts: all
+  serial: 1
+  remote_user: vagrant
+  sudo: no      
+  ## Put the roles you want to test here:
+  roles:
+  - { role: repose-ui }
+
