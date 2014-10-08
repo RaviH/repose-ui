@@ -33,3 +33,9 @@
 .idea
 *.iml
 out
+tomcat.9090
+
+# Ansible stuff
+ansible-ninja/test/vagrant_ansible_inventory_*
+.vagrant
+.idea
