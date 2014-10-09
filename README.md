@@ -32,7 +32,7 @@ Install Repose UI
   1. `git clone https://github.com/RaviH/repose-ui.git`
   1. `cd` into the project directory
 
-Running the app with embedded tomcat
+Running the app with embedded tomcat (for development purposes)
 -----------------
   1. run `grails run-war` *This will start the project in it's default port of 9090*
   1. Goto: http://localhost:9090/repose
