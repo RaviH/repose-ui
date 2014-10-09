@@ -9,6 +9,16 @@ Installation
 ============
 ***Note:*** Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
 
+** Via Ansible
+==========
+----------
+- Install [ansible](http://docs.ansible.com/intro_installation.html)
+- cd {repose-ui-proj-dir}
+- bash ansible-ninja/install.sh 
+
+** Manual Installation
+==========
+----------
 Install Pre-Requisites
 --------------
   * Java (JRE and JDK) *Tested with OpenJDK 7*
