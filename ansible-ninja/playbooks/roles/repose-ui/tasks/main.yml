@@ -1,17 +1,17 @@
-# - include: install-packages.yml
-#   sudo: yes
+- include: install-packages.yml
+  sudo: yes
 
-# - include: install-repose.yml
-#   sudo: yes  
+- include: install-repose.yml
+  sudo: yes  
 
-# - include: install-grails.yml
-#   sudo: yes  
+- include: install-grails.yml
+  sudo: yes  
 
-# - include: install-mongodb.yml
-#   sudo: yes
+- include: install-mongodb.yml
+  sudo: yes
 
-# - include: setup-repose-ui-project
-#   sudo: yes
+- include: setup-repose-ui-project.yml
+  sudo: yes
 
 - include: deploy-repose-ui-to-tomcat.yml
   sudo: yes
