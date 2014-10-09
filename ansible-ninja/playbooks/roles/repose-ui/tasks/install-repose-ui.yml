@@ -1,2 +1,0 @@
-- name: clone the repository
-  git: repo=https://github.com/RaviH/repose-ui.git dest=/tmp/repose-ui

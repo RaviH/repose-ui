@@ -4,5 +4,5 @@
   sudo: no      
   ## Put the roles you want to test here:
   roles:
-  - { role: repose-ui }
+  - { role: repose-ui, for_development: 'false' }
 

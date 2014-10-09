@@ -1,0 +1,5 @@
+- name: Setup Repose UI project | clone the repository
+  git: repo=https://github.com/RaviH/repose-ui.git dest={{ applications_dir }}/repose-ui
+
+- name: Setup Repose UI project | copy the repose-ui.properties template
+  template: src=repose-ui.properties.j2 dest=/root/repose-ui.properties

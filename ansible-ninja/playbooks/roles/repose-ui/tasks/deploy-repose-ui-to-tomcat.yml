@@ -1,0 +1,8 @@
+- name: Deploy to Tomcat | Copy the template to applications dir
+  template: src=deploy-to-tomcat.sh.j2 dest={{ applications_dir }}/deploy-to-tomcat.sh
+
+- name: Deploy to Tomcat | Deploy
+  command: bash {{ applications_dir }}/deploy-to-tomcat.sh
+
+- name: Restart Tomcat
+  service: name=tomcat7 state=restarted

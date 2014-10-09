@@ -1,2 +1,5 @@
-gvm_install_dir: /home/vagrant
-grails_install_dir: /opt
+applications_dir: /opt
+grails_dir: /opt/grails-2.4.3
+repose_ui_dir: /opt/repose-ui
+repose_config_dir: /etc/repose
+repose_ui_log_file_path: /etc/log/repose/repose-ui.log

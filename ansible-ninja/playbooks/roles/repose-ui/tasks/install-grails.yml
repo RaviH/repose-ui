@@ -1,14 +1,5 @@
-- name: Get the zip file for grails
-  get_url: url=http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.3.zip dest={{ ansible_env.HOME }}/grails-2.4.3.zip
+- name: Install Grails | Get the zip file for grails
+  get_url: url=http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.3.zip dest={{ applications_dir }}/grails-2.4.3.zip
 
-- name: Get gvm install script
-  command: curl -s get.gvmtool.net -o /tmp/gvm-install.sh creates=/tmp/gvm-install.sh
-
-- name: install gvm
-  command: bash /tmp/gvm-install.sh
-
-- name: copy install-grails.sh file
-  copy: src=install-grails.sh dest={{ ansible_env.HOME }}/install-grails.sh
-
-- name: gvm install grails 2.4.3
-  command: bash {{ ansible_env.HOME }}/install-grails.sh
+- name: Install Grails | Unzip the grails-2.4.3.zip
+  unarchive: src={{ applications_dir }}/grails-2.4.3.zip dest={{ applications_dir }} copy=no creates={{ grails_dir }}
