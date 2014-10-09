@@ -5,6 +5,8 @@ Allows user to view current Repose configurations, update them and add new ones.
 
 Installation
 ============
+***Note:*** Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
+
 Install Pre-Requisites
 --------------
   * Java (JRE and JDK) *Tested with OpenJDK 7*
@@ -32,12 +34,12 @@ Install Repose UI
   1. `git clone https://github.com/RaviH/repose-ui.git`
   1. `cd` into the project directory
 
-Running the app with embedded tomcat
+Running the app temporarily with embedded tomcat
 -----------------
   1. run `grails run-war` *This will start the project in it's default port of 9090*
   1. Goto: http://localhost:9090/repose
 
-Running the app in Tomcat7
+Deploying the app in Tomcat7
 -----------------
   1. run `grails war` *This will create a war file in {repose-ui-proj-dir}/target*
   1. copy the war file to {tomcat-web-app-dir}: `cp {repose-ui-proj-dir}/target/repose-0.1.war {tomcat-web-app-dir}`
