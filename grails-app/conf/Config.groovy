@@ -12,13 +12,27 @@ import org.apache.log4j.DailyRollingFileAppender
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-def reposeUIConfig = "${userHome}/repose-ui.properties"
-if (!new File(reposeUIConfig).exists()) {
-    throw new FileNotFoundException("Please provide repose-ui properties file")
+def reposeUIConfigLocation = ['/etc/repose', "${userHome}", '/tmp'].find {
+    new File("$it/repose-ui.properties").exists()
 }
 
-System.setProperty('automationMongoService.propertiesLocation', "file:$reposeUIConfig")
-grails.config.locations = ["file:$reposeUIConfig"]
+if (!reposeUIConfigLocation) {
+    reposeUIConfigLocation = "/tmp/repose-ui.properties"
+    def propFile = new File(reposeUIConfigLocation)
+    [
+        "mongoClientUri=mongodb://127.0.0.1:27017/repose-ui\n",
+        "reposeConfigDir=/etc/repose\n",
+        "reposeLogFile=/var/log/repose/current.log\n",
+        "waitTimeForUpdate=20\n"
+    ].each {
+        propFile << it
+    }
+} else {
+    reposeUIConfigLocation += "/repose-ui.properties"
+}
+
+System.setProperty('automationMongoService.propertiesLocation', "file:$reposeUIConfigLocation")
+grails.config.locations = ["file:$reposeUIConfigLocation"]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
