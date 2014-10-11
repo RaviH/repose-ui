@@ -1,0 +1,5 @@
+- name: Install Grails | Get the zip file for grails
+  get_url: url=http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.3.zip dest={{ applications_dir }}/grails-2.4.3.zip
+
+- name: Install Grails | Unzip the grails-2.4.3.zip
+  unarchive: src={{ applications_dir }}/grails-2.4.3.zip dest={{ applications_dir }} copy=no creates={{ grails_dir }}

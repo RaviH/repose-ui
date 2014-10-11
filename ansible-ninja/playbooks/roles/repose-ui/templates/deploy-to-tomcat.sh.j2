@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export GRAILS_HOME=/opt/grails-2.4.3
+export PATH=$GRAILS_HOME/bin:$PATH
+
+cd {{ repose_ui_dir }}
+rm -rf {{ repose_ui_dir }}/target
+##
+echo "Creating war file and deploying to tomcat7 webapps dir /var/lib/tomcat7/webapps"
+grails war /var/lib/tomcat7/webapps/repose.war
+echo "Done creating and deploying war file"

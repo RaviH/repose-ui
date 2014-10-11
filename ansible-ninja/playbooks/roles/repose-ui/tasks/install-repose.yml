@@ -1,0 +1,16 @@
+- name: Install Repose | Add repose repository key
+  apt_key: url=http://repo.openrepose.org/debian/pubkey.gpg state=present
+
+- name: Install Repose | Add apt repository
+  apt_repository: repo='deb http://repo.openrepose.org/debian stable main' state=present update_cache=yes validate_certs=no
+
+- name: Install Repose | Install required service package(s)
+  apt: name={{item}}
+       state=present
+  with_items:
+  - repose-valve 
+  - repose-filter-bundle 
+  - repose-extensions-filter-bundle
+
+- name: Install Repose | Start repose
+  service: name=repose-valve state=started
