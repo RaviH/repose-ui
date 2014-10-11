@@ -33,3 +33,10 @@
 .idea
 *.iml
 out
+
+# Build ignores
+tomcat.9090
+
+# Ansible artifact ignores
+ansible-ninja/test/.vagrant/*
+ansible-ninja/test/vagrant_ansible_inventory_ansible_test

@@ -3,6 +3,8 @@ Repose UI
 
 Allows user to view current Repose configurations, update them and add new ones.
 
+[![Build Status](https://drone.io/github.com/RaviH/repose-ui/status.png)](https://drone.io/github.com/RaviH/repose-ui/latest)
+
 Installation
 ============
 ***Note:*** Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
