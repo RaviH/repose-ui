@@ -53,6 +53,7 @@ grails.project.dependency.resolution = {
     dependencies {
         compile "org.mongodb:mongo-java-driver:2.12.2"
         compile 'com.google.guava:guava:18.0'
+        compile 'org.uberfire:uberfire-nio2-model:0.5.0.CR1' // Adding this just to make sure drone builds okay!
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
     }
 
