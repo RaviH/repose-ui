@@ -1,0 +1,17 @@
+- name: Install Packages | Install openjdk-7-jdk
+  apt: name=openjdk-7-jdk update_cache=yes
+
+- name: Install Packages | Install tomcat7
+  apt: name=tomcat7 update_cache=no
+
+- name: Install Packages | Install git
+  apt: name=git update_cache=no
+
+- name: Install Packages | Install sed
+  apt: name=sed update_cache=no
+
+- name: Install Packages | Install unzip
+  apt: name=unzip update_cache=no
+
+- name: Install Packages | Install curl
+  apt: name=curl update_cache=no
