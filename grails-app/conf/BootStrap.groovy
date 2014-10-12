@@ -29,13 +29,9 @@ class BootStrap {
         def reposeLogFilePath = grailsApplication.config.reposeLogFile
         if (reposeLogFilePath) {
             def reposeLogFile = new File(reposeLogFilePath)
-            def reposeLogDir = new File(reposeLogFile.parent)
             if (!reposeLogFile.exists() || !reposeLogFile.canRead()) {
                 throw new ApplicationLaunchException("Repose log file either does not exist or is not readable OR you ATE it!!!")
-            } else if (!reposeLogDir.canWrite()) {
-                throw new ApplicationLaunchException("Repose log directory -- cannot create repose ui logs in there...you know!")
-            }
-            else {
+            } else {
                 log.info("Repose log file: $reposeLogFilePath found!!!")
             }
         } else {

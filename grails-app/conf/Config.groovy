@@ -9,30 +9,16 @@ import org.apache.log4j.DailyRollingFileAppender
 //                             "file:${userHome}/.grails/${appName}-config.properties",
 //                             "file:${userHome}/.grails/${appName}-config.groovy"]
 
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
-def reposeUIConfigLocation = ['/etc/repose', "${userHome}", '/tmp'].find {
-    new File("$it/repose-ui.properties").exists()
-}
+// Default repose-ui.properties in case the user does not provide them
+reposeConfigDir = "/etc/repose"
+reposeLogFile = "/var/log/repose/current.log"
+waitTimeForUpdate = 20
 
-if (!reposeUIConfigLocation) {
-    reposeUIConfigLocation = "/tmp/repose-ui.properties"
-    def propFile = new File(reposeUIConfigLocation)
-    [
-        "mongoClientUri=mongodb://127.0.0.1:27017/repose-ui\n",
-        "reposeConfigDir=/etc/repose\n",
-        "reposeLogFile=/var/log/repose/current.log\n",
-        "waitTimeForUpdate=20\n"
-    ].each {
-        propFile << it
-    }
-} else {
-    reposeUIConfigLocation += "/repose-ui.properties"
+def configSystemPropertyName = 'repose-ui.config.location'
+if (System.properties[configSystemPropertyName]) {
+    println("System property: $configSystemPropertyName]: ${System.properties[configSystemPropertyName]}")
+    grails.config.locations = ["file:" + System.properties[configSystemPropertyName]]
 }
-
-System.setProperty('automationMongoService.propertiesLocation', "file:$reposeUIConfigLocation")
-grails.config.locations = ["file:$reposeUIConfigLocation"]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
