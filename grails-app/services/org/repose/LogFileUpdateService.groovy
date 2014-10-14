@@ -47,7 +47,7 @@ class LogFileUpdateService {
         def message = ""
         Broadcaster b = atmosphereMeteor.broadcasterFactory.lookup(DefaultBroadcaster.class, mapping)
 
-        tail({ message += " $it" })
+        tail({ message += " $it\n" })
         int i = 20
         while (1) {
             if (i == 0 || hasReposeFinishedUpdating(message?.toLowerCase())) {
