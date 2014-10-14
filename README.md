@@ -7,7 +7,21 @@ Allows user to view current Repose configurations, update them and add new ones.
 
 Installation
 ============
-***Note:*** Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
+***Note:*** 
+
+- Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
+
+
+- There are a couple different ways you can install repose which affect where the config files exist. You may want to override default repose-ui properties like reposeConfigDir, reposeLogFile based on your method of repose installation.  [More information here.](#override-default-properties)
+
+
+Via repose-ui war file
+----------
+
+- [Download the war file](https://s3.amazonaws.com/repose-ui-bucket/artifacts/repose-ui-0.1.2.war) 
+ - You can get any build artifact by changing the build number (2 in the link above) with the version you want. The latest build version can be found here: [Latest build on drone.io](https://drone.io/github.com/RaviH/repose-ui/latest)
+- Deploy it to your favorite server just like you would deploy any other war application.
+
 
 Via Ansible
 ----------
@@ -28,21 +42,6 @@ Manual installation
   * Java (JRE and JDK) *Tested with OpenJDK 7*
   * [mongodb](http://mongodb.org) installed and running
   * [Grails](http://grails.org) 2.4.3 (e.g. installed via [GVM tool](http://gvmtool.net/))
-  * A file called ***repose-ui.properties*** in the users' home directory with the following content:
-
-```
-    # mongo db server address
-    mongoClientUri=mongodb://127.0.0.1:27017/ReposeConfig
-
-    # repose configuration directory
-    reposeConfigDir=/etc/repose
-
-    # repose log file
-    reposeLogFile=/var/log/repose/current.log
-
-    # repose ui log file
-    appLogFile=/var/log/repose/repose-ui.log
-```
 
 ###Clone Repose UI
 
@@ -61,3 +60,20 @@ Deploy with Tomcat 7
   1. copy the war file to {tomcat-web-app-dir}: `cp {repose-ui-proj-dir}/target/repose-0.1.war {tomcat-web-app-dir}`
   1. restart tomcat `sudo service tomcat7 restart`
   1. Goto: http://localhost:9090/repose
+
+
+Override default repose-ui properties
+------------------
+<a name="override-default-properties"></a>
+You can set system property `repose-ui.config.location` for ex: `-Drepose-ui.config.location=/home/foobar/repose-ui.properties` and override any/all of the properties below:
+
+```sh
+# repose log file
+reposeLogFile=/var/log/repose/current.log
+
+# repose configuration directory
+reposeConfigDir=/etc/repose
+
+# Wait at max 20 seconds before cancelling the current update to repose config file.
+waitTimeForUpdate=20
+```
