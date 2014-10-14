@@ -10,13 +10,15 @@ Installation
 ***Note:*** 
 
 - Repose UI needs to access `/etc/repose`, and so **may need to be run as root**.
-- [To override default repose-ui properties](#override-default-properties)
+
+
+- There are a couple different ways you can install repose which affect where the config files exist. You may want to override default repose-ui properties like reposeConfigDir, reposeLogFile based on your method of repose installation.  [More information here.](#override-default-properties)
 
 
 Via repose-ui war file
 ----------
 
-- Download the war file from [S3](https://s3.amazonaws.com/repose-ui-bucket/artifacts/repose-ui-0.1.2.war) 
+- [Download the war file](https://s3.amazonaws.com/repose-ui-bucket/artifacts/repose-ui-0.1.2.war) 
  - You can get any build artifact by changing the build number (2 in the link above) with the version you want. The latest build version can be found here: [Latest build on drone.io](https://drone.io/github.com/RaviH/repose-ui/latest)
 - Deploy it to your favorite server just like you would deploy any other war application.
 
@@ -65,15 +67,13 @@ Override default repose-ui properties
 <a name="override-default-properties"></a>
 You can set system property `repose-ui.config.location` for ex: `-Drepose-ui.config.location=/home/foobar/repose-ui.properties` and override any/all of the properties below:
 
-```
+```sh
+# repose log file
+reposeLogFile=/var/log/repose/current.log
 
-    # repose log file
-    reposeLogFile=/var/log/repose/current.log
+# repose configuration directory
+reposeConfigDir=/etc/repose
 
-    # repose configuration directory
-    reposeConfigDir=/etc/repose
-
-    # Wait at max 20 seconds before cancelling the current update to repose config file.
-    waitTimeForUpdate=20
-
+# Wait at max 20 seconds before cancelling the current update to repose config file.
+waitTimeForUpdate=20
 ```
