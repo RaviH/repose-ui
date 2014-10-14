@@ -72,7 +72,7 @@ var Jabber = {
             if ((logMessages == '')) {
                 return;
             }
-            $('#logContent').val(logMessages);
+            $('#logContent').html(logMessages);
         } else {
             bootbox.alert("No response yet!!!");
         }

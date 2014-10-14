@@ -80,7 +80,7 @@
                 '               <textarea class="col-md-11" id="configContent">' + data + '</textarea>' +
                 '           </div>' +
                 '           <div class="col-md-12">' +
-                '               <textarea class="col-md-12" id="logContent" disabled></textarea>' +
+                '               <pre class="col-md-12" id="logContent"></pre>' +
                 '           </div>' +
                 '       </div>' +
                 '   </form>' +

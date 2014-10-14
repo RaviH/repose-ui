@@ -28,8 +28,10 @@
 }
 
 #logContent {
-    background-color: #000000;
-    color: #ffffff;
-    height: 20em;
-    width: 100%;
+    background: none repeat scroll 0 0 #333;
+    color: #fff;
+    margin-top: 30px;
+    font-family: "Droid Sans Mono","Courier New",monospace;
+    height: 30em;
+    width: 940px;
 }
